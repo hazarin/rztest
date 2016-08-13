@@ -33,7 +33,7 @@ class AppShowalletCommand extends ContainerAwareCommand
      *
      * @return float
      */
-    protected function convert($from, $to, $summ)
+    private function convert($from, $to, $summ)
     {
         if ($from == $to) {
             return $summ;
@@ -98,6 +98,10 @@ class AppShowalletCommand extends ContainerAwareCommand
         $user = $this->em->getRepository('AppBundle:User')->findOneByUsername($user_name);
         if (is_null($user)) {
             throw new EntityNotFoundException('The specified user does not exist.');
+        }
+        if (is_null($user->getWallet())) {
+            $output->writeln('User has no money yet ((((');
+            return;
         }
 
         $result = [];
